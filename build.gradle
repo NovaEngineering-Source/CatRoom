@@ -80,7 +80,8 @@ def jvm_arguments = [
 
 def compiler_jvm_arguments = [
         '--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED',
-        '--add-exports=java.base/jdk.internal.reflect=ALL-UNNAMED'
+        '--add-exports=java.base/jdk.internal.reflect=ALL-UNNAMED',
+        '--add-modules=jdk.incubator.vector' // CatRoom - SIMD support
 ]
 // Projects
 

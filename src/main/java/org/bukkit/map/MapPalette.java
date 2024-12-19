@@ -28,7 +28,7 @@ public final class MapPalette {
         return weightR * r * r + weightG * g * g + weightB * b * b;
     }
 
-    static final Color[] colors = {
+    public static final Color[] colors = { // CatRoom - Vectorized map palette - package-private -> public
         c(0, 0, 0), c(0, 0, 0), c(0, 0, 0), c(0, 0, 0),
         c(89, 125, 39), c(109, 153, 48), c(127, 178, 56), c(67, 94, 29),
         c(174, 164, 115), c(213, 201, 140), c(247, 233, 163), c(130, 123, 86),
@@ -187,9 +187,14 @@ public final class MapPalette {
         temp.getRGB(0, 0, temp.getWidth(), temp.getHeight(), pixels, 0, temp.getWidth());
 
         byte[] result = new byte[temp.getWidth() * temp.getHeight()];
-        for (int i = 0; i < pixels.length; i++) {
-            result[i] = matchColor(new Color(pixels[i], true));
+        if (!gg.pufferfish.pufferfish.simd.SIMDDetection.isEnabled()) { // CatRoom start - Vectorized map color conversion
+            for (int i = 0; i < pixels.length; i++) {
+                result[i] = matchColor(new Color(pixels[i], true));
+            }
+        } else {
+            gg.pufferfish.pufferfish.simd.VectorMapPalette.matchColorVectorized(pixels, result);
         }
+        // CatRoom end - Vectorized map color conversion
         return result;
     }
 
