@@ -48,8 +48,6 @@ public class CatServerConfig {
 
     public boolean waitForgeServerChatEvent = false;
 
-    public boolean bridgeForgeExplosionEventToBukkit = true; // CatRoom
-
     public int craftRequestThrottle = 20;
     public int itemNBTThrottle = 200;
     public boolean limitFastClickGUI = false;
@@ -65,6 +63,7 @@ public class CatServerConfig {
     public int playerProfileResultCacheMinutes = 1440;
 
     public boolean callConstructCapabilityEventOnRespawn = false;
+    public boolean bridgeForgeExplosionEventToBukkit = false;
 
     public boolean enableAffinity = false;
     public BitSet affinity = Affinity.getAffinity();
@@ -117,10 +116,9 @@ public class CatServerConfig {
         disableFMLStatusModInfo = getOrWriteBooleanConfig("network.fml.disableStatusModInfo", config.getBoolean("disableFMLStatusModInfo", disableFMLStatusModInfo));
         cachePlayerProfileResult = getOrWriteBooleanConfig("network.profile.cachePlayerProfileResult", cachePlayerProfileResult);
         playerProfileResultCacheMinutes = getOrWriteIntConfig("network.profile.playerProfileResultCacheMinutes", playerProfileResultCacheMinutes);
-        // event bridge
-        bridgeForgeExplosionEventToBukkit = getOrWriteBooleanConfig("event-bridge.bridgeForgeExplosionEventToBukkit", bridgeForgeExplosionEventToBukkit);
         // compatibility
         callConstructCapabilityEventOnRespawn = getOrWriteBooleanConfig("compatibility.callConstructCapabilityEventOnRespawn", callConstructCapabilityEventOnRespawn);
+        bridgeForgeExplosionEventToBukkit = getOrWriteBooleanConfig("compatibility.bridgeForgeExplosionEventToBukkit", bridgeForgeExplosionEventToBukkit);
         // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
         disableAsyncCatchWarn = getOrWriteBooleanConfig("disableAsyncCatchWarn", disableAsyncCatchWarn);
