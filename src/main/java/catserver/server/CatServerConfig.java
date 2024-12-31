@@ -61,6 +61,8 @@ public class CatServerConfig {
     public boolean disableFMLStatusModInfo = false;
     public boolean disableAsyncCatchWarn = false;
     public boolean versionCheck = true;
+    public boolean cachePlayerProfileResult = false;
+    public int playerProfileResultCacheMinutes = 1440;
 
     public boolean callConstructCapabilityEventOnRespawn = false;
 
@@ -113,6 +115,8 @@ public class CatServerConfig {
         releaseUseItemThrottle = getOrWriteIntConfig("network.packetLimit.releaseUseItemThrottle", releaseUseItemThrottle);
         disableFMLHandshake = getOrWriteBooleanConfig("network.fml.disableHandshake", config.getBoolean("disableFMLHandshake", disableFMLHandshake));
         disableFMLStatusModInfo = getOrWriteBooleanConfig("network.fml.disableStatusModInfo", config.getBoolean("disableFMLStatusModInfo", disableFMLStatusModInfo));
+        cachePlayerProfileResult = getOrWriteBooleanConfig("network.profile.cachePlayerProfileResult", cachePlayerProfileResult);
+        playerProfileResultCacheMinutes = getOrWriteIntConfig("network.profile.playerProfileResultCacheMinutes", playerProfileResultCacheMinutes);
         // event bridge
         bridgeForgeExplosionEventToBukkit = getOrWriteBooleanConfig("event-bridge.bridgeForgeExplosionEventToBukkit", bridgeForgeExplosionEventToBukkit);
         // compatibility

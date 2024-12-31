@@ -508,6 +508,7 @@ project(':cleanroom') {
         installer 'net.openhft:affinity:3.23.3'
         installer 'org.slf4j:slf4j-api:2.1.0-alpha1' // Affinity
         installer 'org.slf4j:slf4j-simple:2.1.0-alpha1' // Affinity
+        installer 'com.github.ben-manes.caffeine:caffeine:3.1.8'
 
         /*
         forgeGradleMcDeps
