@@ -1,6 +1,6 @@
 --- before/net/minecraft/network/NetworkSystem.java
 +++ after/net/minecraft/network/NetworkSystem.java
-@@ -49,27 +49,27 @@
+@@ -49,27 +49,36 @@
      {
          protected NioEventLoopGroup func_179280_b()
          {
@@ -30,10 +30,19 @@
 -    private final List<NetworkManager> field_151272_f = Collections.synchronizedList(Lists.newArrayList());
 +    private final List<ChannelFuture> field_151274_e = Collections.<ChannelFuture>synchronizedList(Lists.newArrayList());
 +    private final List<NetworkManager> field_151272_f = Collections.<NetworkManager>synchronizedList(Lists.newArrayList());
++    // Paper start - prevent blocking on adding a new network manager while the server is ticking
++    private final List<NetworkManager> pending = Collections.<NetworkManager>synchronizedList(Lists.newArrayList());
++    private void addPending() {
++        synchronized (pending) {
++            this.field_151272_f.addAll(pending);
++            pending.clear();
++        }
++    }
++    // Paper end
  
      public NetworkSystem(MinecraftServer p_i45292_1_)
      {
-@@ -79,6 +79,7 @@
+@@ -79,6 +88,7 @@
  
      public void func_151265_a(InetAddress p_151265_1_, int p_151265_2_) throws IOException
      {
@@ -41,7 +50,7 @@
          synchronized (this.field_151274_e)
          {
              Class <? extends ServerSocketChannel > oclass;
-@@ -97,43 +98,26 @@
+@@ -97,43 +107,26 @@
                  field_151275_b.info("Using default channel type");
              }
  
@@ -76,7 +85,8 @@
 -                    .addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
 +                    p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(net.minecraftforge.fml.common.network.internal.FMLNetworkHandler.READ_TIMEOUT)).addLast("legacy_query", new LegacyPingHandler(NetworkSystem.this)).addLast("splitter", new NettyVarint21FrameDecoder()).addLast("decoder", new NettyPacketDecoder(EnumPacketDirection.SERVERBOUND)).addLast("prepender", new NettyVarint21FrameEncoder()).addLast("encoder", new NettyPacketEncoder(EnumPacketDirection.CLIENTBOUND));
                      NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
-                     NetworkSystem.this.field_151272_f.add(networkmanager);
+-                    NetworkSystem.this.field_151272_f.add(networkmanager);
++                    pending.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
                      networkmanager.func_150719_a(new NetHandlerHandshakeTCP(NetworkSystem.this.field_151273_d, networkmanager));
                  }
@@ -91,7 +101,7 @@
          }
      }
  
-@@ -144,9 +128,8 @@
+@@ -144,9 +137,8 @@
  
          synchronized (this.field_151274_e)
          {
@@ -102,7 +112,7 @@
                  protected void initChannel(Channel p_initChannel_1_) throws Exception
                  {
                      NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
-@@ -154,7 +137,7 @@
+@@ -154,7 +146,7 @@
                      NetworkSystem.this.field_151272_f.add(networkmanager);
                      p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
                  }
@@ -111,7 +121,7 @@
              this.field_151274_e.add(channelfuture);
          }
  
-@@ -171,7 +154,7 @@
+@@ -171,7 +163,7 @@
              {
                  channelfuture.channel().close().sync();
              }
@@ -120,11 +130,12 @@
              {
                  field_151275_b.error("Interrupted whilst closing channel");
              }
-@@ -182,6 +165,13 @@
+@@ -182,6 +174,14 @@
      {
          synchronized (this.field_151272_f)
          {
 +            // Spigot Start
++            addPending(); // Paper
 +            // This prevents players from 'gaming' the server, and strategically relogging to increase their position in the tick order
 +            if (org.spigotmc.SpigotConfig.playerShuffle > 0 && MinecraftServer.currentTick % org.spigotmc.SpigotConfig.playerShuffle == 0)
 +            {
@@ -134,7 +145,7 @@
              Iterator<NetworkManager> iterator = this.field_151272_f.iterator();
  
              while (iterator.hasNext())
-@@ -216,7 +206,6 @@
+@@ -216,7 +216,6 @@
                              final TextComponentString textcomponentstring = new TextComponentString("Internal server error");
                              networkmanager.func_179288_a(new SPacketDisconnect(textcomponentstring), new GenericFutureListener < Future <? super Void >> ()
                              {
@@ -142,7 +153,7 @@
                                  public void operationComplete(Future <? super Void > p_operationComplete_1_) throws Exception
                                  {
                                      networkmanager.func_150718_a(textcomponentstring);
-@@ -227,6 +216,9 @@
+@@ -227,6 +226,9 @@
                      }
                      else
                      {
