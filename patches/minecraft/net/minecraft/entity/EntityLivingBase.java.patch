@@ -40,7 +40,7 @@
  import net.minecraft.nbt.NBTTagList;
  import net.minecraft.network.datasync.DataParameter;
  import net.minecraft.network.datasync.DataSerializers;
-@@ -76,22 +86,35 @@
+@@ -76,22 +86,37 @@
  import net.minecraftforge.fml.relauncher.SideOnly;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
@@ -69,11 +69,13 @@
 -    private static final DataParameter<Integer> field_184635_h = EntityDataManager.func_187226_a(EntityLivingBase.class, DataSerializers.field_187192_b);
 +    private static final AttributeModifier field_110157_c = (new AttributeModifier(field_110156_b, "Sprinting speed boost", 0.30000001192092896D, 2)).func_111168_a(false);
 +    public static final net.minecraft.entity.ai.attributes.IAttribute SWIM_SPEED = new net.minecraft.entity.ai.attributes.RangedAttribute(null, "forge.swimSpeed", 1.0D, 0.0D, 1024.0D).func_111112_a(true);
-+    protected static final DataParameter<Byte> field_184621_as = EntityDataManager.<Byte>func_187226_a(EntityLivingBase.class, DataSerializers.field_187191_a);
++    public static final DataParameter<Byte> field_184621_as = EntityDataManager.<Byte>func_187226_a(EntityLivingBase.class, DataSerializers.field_187191_a); // CatRoom - protected -> public
 +    public static final DataParameter<Float> field_184632_c = EntityDataManager.<Float>func_187226_a(EntityLivingBase.class, DataSerializers.field_187193_c);
-+    private static final DataParameter<Integer> field_184633_f = EntityDataManager.<Integer>func_187226_a(EntityLivingBase.class, DataSerializers.field_187192_b);
-+    private static final DataParameter<Boolean> field_184634_g = EntityDataManager.<Boolean>func_187226_a(EntityLivingBase.class, DataSerializers.field_187198_h);
-+    private static final DataParameter<Integer> field_184635_h = EntityDataManager.<Integer>func_187226_a(EntityLivingBase.class, DataSerializers.field_187192_b);
++    // CatRoom start - private -> public
++    public static final DataParameter<Integer> field_184633_f = EntityDataManager.<Integer>func_187226_a(EntityLivingBase.class, DataSerializers.field_187192_b);
++    public static final DataParameter<Boolean> field_184634_g = EntityDataManager.<Boolean>func_187226_a(EntityLivingBase.class, DataSerializers.field_187198_h);
++    public static final DataParameter<Integer> field_184635_h = EntityDataManager.<Integer>func_187226_a(EntityLivingBase.class, DataSerializers.field_187192_b);
++    // CatRoom end - private -> public
      private AbstractAttributeMap field_110155_d;
 -    private final CombatTracker field_94063_bt = new CombatTracker(this);
 -    private final Map<Potion, PotionEffect> field_70713_bf = Maps.newHashMap();
@@ -86,7 +88,7 @@
      public boolean field_82175_bq;
      public EnumHand field_184622_au;
      public int field_110158_av;
-@@ -116,7 +139,7 @@
+@@ -116,7 +141,7 @@
      public float field_70759_as;
      public float field_70758_at;
      public float field_70747_aH = 0.02F;
@@ -95,7 +97,7 @@
      protected int field_70718_bc;
      protected boolean field_70729_aU;
      protected int field_70708_bq;
-@@ -126,7 +149,7 @@
+@@ -126,7 +151,7 @@
      protected float field_70763_ax;
      protected float field_70741_aB;
      protected int field_70744_aE;
@@ -104,7 +106,7 @@
      protected boolean field_70703_bu;
      public float field_70702_br;
      public float field_70701_bs;
-@@ -138,9 +161,9 @@
+@@ -138,9 +163,9 @@
      protected double field_184625_bj;
      protected double field_184626_bk;
      protected double field_70709_bj;
@@ -117,7 +119,7 @@
      private EntityLivingBase field_110150_bn;
      private int field_142016_bo;
      private float field_70746_aG;
-@@ -153,7 +176,21 @@
+@@ -153,7 +178,21 @@
      private DamageSource field_189750_bF;
      private long field_189751_bG;
  
@@ -140,7 +142,7 @@
      public void func_174812_G()
      {
          this.func_70097_a(DamageSource.field_76380_i, Float.MAX_VALUE);
-@@ -163,24 +200,25 @@
+@@ -163,24 +202,25 @@
      {
          super(p_i1594_1_);
          this.func_110147_ax();
@@ -175,7 +177,7 @@
      }
  
      protected void func_110147_ax()
-@@ -190,9 +228,9 @@
+@@ -190,9 +230,9 @@
          this.func_110140_aT().func_111150_b(SharedMonsterAttributes.field_111263_d);
          this.func_110140_aT().func_111150_b(SharedMonsterAttributes.field_188791_g);
          this.func_110140_aT().func_111150_b(SharedMonsterAttributes.field_189429_h);
@@ -186,7 +188,7 @@
      protected void func_184231_a(double p_184231_1_, boolean p_184231_3_, IBlockState p_184231_4_, BlockPos p_184231_5_)
      {
          if (!this.func_70090_H())
-@@ -204,23 +242,21 @@
+@@ -204,23 +244,21 @@
          {
              float f = (float)MathHelper.func_76123_f(this.field_70143_R - 3.0F);
  
@@ -224,7 +226,7 @@
              }
          }
  
-@@ -232,7 +268,6 @@
+@@ -232,7 +270,6 @@
          return false;
      }
  
@@ -232,7 +234,7 @@
      public void func_70030_z()
      {
          this.field_70732_aI = this.field_70733_aJ;
-@@ -250,11 +285,11 @@
+@@ -250,11 +287,11 @@
              {
                  double d0 = this.field_70170_p.func_175723_af().func_177745_a(this) + this.field_70170_p.func_175723_af().func_177742_m();
  
@@ -246,7 +248,7 @@
                      {
                          this.func_70097_a(DamageSource.field_76368_d, (float)Math.max(1, MathHelper.func_76128_c(-d0 * d1)));
                      }
-@@ -273,7 +308,12 @@
+@@ -273,7 +310,12 @@
          {
              if (!this.func_70055_a(Material.field_151586_h))
              {
@@ -260,7 +262,7 @@
              }
              else
              {
-@@ -290,23 +330,14 @@
+@@ -290,23 +332,14 @@
                              float f2 = this.field_70146_Z.nextFloat() - this.field_70146_Z.nextFloat();
                              float f = this.field_70146_Z.nextFloat() - this.field_70146_Z.nextFloat();
                              float f1 = this.field_70146_Z.nextFloat() - this.field_70146_Z.nextFloat();
@@ -286,7 +288,7 @@
                  {
                      this.func_184210_p();
                  }
-@@ -364,11 +395,11 @@
+@@ -364,11 +397,11 @@
          {
              if (!this.field_70755_b.func_70089_S())
              {
@@ -300,7 +302,7 @@
              }
          }
  
-@@ -381,6 +412,16 @@
+@@ -381,6 +414,16 @@
          this.field_70170_p.field_72984_F.func_76319_b();
      }
  
@@ -317,7 +319,7 @@
      protected void func_184594_b(BlockPos p_184594_1_)
      {
          int i = EnchantmentHelper.func_185284_a(Enchantments.field_185301_j, this);
-@@ -400,38 +441,27 @@
+@@ -400,38 +443,27 @@
      {
          ++this.field_70725_aQ;
  
@@ -365,7 +367,7 @@
              }
          }
      }
-@@ -528,7 +558,6 @@
+@@ -528,7 +560,6 @@
          }
      }
  
@@ -373,7 +375,7 @@
      public void func_70014_b(NBTTagCompound p_70014_1_)
      {
          p_70014_1_.func_74776_a("Health", this.func_110143_aJ());
-@@ -574,7 +603,6 @@
+@@ -574,7 +605,6 @@
          p_70014_1_.func_74757_a("FallFlying", this.func_184613_cA());
      }
  
@@ -381,7 +383,7 @@
      public void func_70037_a(NBTTagCompound p_70037_1_)
      {
          this.func_110149_m(p_70037_1_.func_74760_g("AbsorptionAmount"));
-@@ -600,6 +628,15 @@
+@@ -600,6 +630,15 @@
              }
          }
  
@@ -397,7 +399,7 @@
          if (p_70037_1_.func_150297_b("Health", 99))
          {
              this.func_70606_j(p_70037_1_.func_74760_g("Health"));
-@@ -626,10 +663,13 @@
+@@ -626,10 +665,13 @@
          }
      }
  
@@ -412,7 +414,7 @@
          try
          {
              while (iterator.hasNext())
-@@ -639,7 +679,7 @@
+@@ -639,7 +681,7 @@
  
                  if (!potioneffect.func_76455_a(this))
                  {
@@ -421,7 +423,7 @@
                      {
                          iterator.remove();
                          this.func_70688_c(potioneffect);
-@@ -651,9 +691,20 @@
+@@ -651,9 +693,20 @@
                  }
              }
          }
@@ -444,7 +446,7 @@
  
          if (this.field_70752_e)
          {
-@@ -665,8 +716,8 @@
+@@ -665,8 +718,8 @@
              this.field_70752_e = false;
          }
  
@@ -455,7 +457,7 @@
  
          if (i > 0)
          {
-@@ -688,19 +739,10 @@
+@@ -688,19 +741,10 @@
  
              if (flag && i > 0)
              {
@@ -479,7 +481,7 @@
              }
          }
      }
-@@ -715,8 +757,10 @@
+@@ -715,8 +759,10 @@
          else
          {
              Collection<PotionEffect> collection = this.field_70713_bf.values();
@@ -492,7 +494,7 @@
              this.func_82142_c(this.func_70644_a(MobEffects.field_76441_p));
          }
      }
-@@ -736,8 +780,8 @@
+@@ -736,8 +782,8 @@
  
      protected void func_175133_bi()
      {
@@ -503,7 +505,7 @@
      }
  
      public void func_70674_bp()
-@@ -748,7 +792,10 @@
+@@ -748,7 +794,10 @@
  
              while (iterator.hasNext())
              {
@@ -515,7 +517,7 @@
                  iterator.remove();
              }
          }
-@@ -777,10 +824,15 @@
+@@ -777,10 +826,15 @@
  
      public void func_70690_d(PotionEffect p_70690_1_)
      {
@@ -531,7 +533,7 @@
              if (potioneffect == null)
              {
                  this.field_70713_bf.put(p_70690_1_.func_188419_a(), p_70690_1_);
-@@ -796,6 +848,9 @@
+@@ -796,6 +850,9 @@
  
      public boolean func_70687_e(PotionEffect p_70687_1_)
      {
@@ -541,7 +543,7 @@
          if (this.func_70668_bt() == EnumCreatureAttribute.UNDEAD)
          {
              Potion potion = p_70687_1_.func_188419_a();
-@@ -817,11 +872,16 @@
+@@ -817,11 +874,16 @@
      @Nullable
      public PotionEffect func_184596_c(@Nullable Potion p_184596_1_)
      {
@@ -558,7 +560,7 @@
          PotionEffect potioneffect = this.func_184596_c(p_184589_1_);
  
          if (potioneffect != null)
-@@ -862,29 +922,63 @@
+@@ -862,29 +924,63 @@
          }
      }
  
@@ -626,7 +628,7 @@
          if (this.func_180431_b(p_70097_1_))
          {
              return false;
-@@ -909,16 +1003,17 @@
+@@ -909,16 +1005,17 @@
              {
                  float f = p_70097_2_;
  
@@ -648,7 +650,7 @@
                  {
                      this.func_184590_k(p_70097_2_);
                      p_70097_2_ = 0.0F;
-@@ -943,22 +1038,38 @@
+@@ -943,22 +1040,38 @@
                  {
                      if (p_70097_2_ <= this.field_110153_bc)
                      {
@@ -689,7 +691,7 @@
                  this.field_70739_aP = 0.0F;
                  Entity entity1 = p_70097_1_.func_76346_g();
  
-@@ -974,9 +1085,9 @@
+@@ -974,9 +1087,9 @@
                          this.field_70718_bc = 100;
                          this.field_70717_bb = (EntityPlayer)entity1;
                      }
@@ -701,7 +703,7 @@
  
                          if (entitywolf.func_70909_n())
                          {
-@@ -1026,17 +1137,17 @@
+@@ -1026,17 +1139,17 @@
                          double d1 = entity1.field_70165_t - this.field_70165_t;
                          double d0;
  
@@ -723,7 +725,7 @@
                      }
                  }
  
-@@ -1096,22 +1207,28 @@
+@@ -1096,22 +1209,28 @@
          else
          {
              ItemStack itemstack = null;
@@ -758,7 +760,7 @@
                  {
                      EntityPlayerMP entityplayermp = (EntityPlayerMP)this;
                      entityplayermp.func_71029_a(StatList.func_188057_b(Items.field_190929_cY));
-@@ -1125,7 +1242,8 @@
+@@ -1125,7 +1244,8 @@
                  this.field_70170_p.func_72960_a(this, (byte)35);
              }
  
@@ -768,7 +770,7 @@
          }
      }
  
-@@ -1160,9 +1278,9 @@
+@@ -1160,9 +1280,9 @@
              {
                  Vec3d vec3d1 = this.func_70676_i(1.0F);
                  Vec3d vec3d2 = vec3d.func_72444_a(new Vec3d(this.field_70165_t, this.field_70163_u, this.field_70161_v)).func_72432_b();
@@ -780,7 +782,7 @@
                  {
                      return true;
                  }
-@@ -1174,34 +1292,29 @@
+@@ -1174,34 +1294,29 @@
  
      public void func_70669_a(ItemStack p_70669_1_)
      {
@@ -829,7 +831,7 @@
          if (!this.field_70729_aU)
          {
              Entity entity = p_70645_1_.func_76346_g();
-@@ -1222,18 +1335,42 @@
+@@ -1222,18 +1337,42 @@
  
              if (!this.field_70170_p.field_72995_K)
              {
@@ -877,7 +879,7 @@
              }
  
              this.field_70170_p.func_72960_a(this, (byte)3);
-@@ -1252,23 +1389,26 @@
+@@ -1252,23 +1391,26 @@
  
      public void func_70653_a(Entity p_70653_1_, float p_70653_2_, double p_70653_3_, double p_70653_5_)
      {
@@ -910,7 +912,7 @@
                  }
              }
          }
-@@ -1310,26 +1450,17 @@
+@@ -1310,26 +1452,17 @@
              BlockPos blockpos = new BlockPos(i, j, k);
              IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
              Block block = iblockstate.func_177230_c();
@@ -940,7 +942,7 @@
              {
                  return true;
              }
-@@ -1338,15 +1469,16 @@
+@@ -1338,15 +1471,16 @@
          return false;
      }
  
@@ -959,7 +961,7 @@
          super.func_180430_e(p_180430_1_, p_180430_2_);
          PotionEffect potioneffect = this.func_70660_b(MobEffects.field_76430_j);
          float f = potioneffect == null ? 0.0F : (float)(potioneffect.func_76458_c() + 1);
-@@ -1354,23 +1486,25 @@
+@@ -1354,23 +1488,25 @@
  
          if (i > 0)
          {
@@ -989,7 +991,7 @@
      public void func_70057_ab()
      {
          this.field_70738_aO = 10;
-@@ -1396,10 +1530,8 @@
+@@ -1396,10 +1532,8 @@
      {
          if (!p_70655_1_.func_76363_c())
          {
@@ -1002,7 +1004,7 @@
          }
  
          return p_70655_2_;
-@@ -1413,7 +1545,8 @@
+@@ -1413,7 +1547,8 @@
          }
          else
          {
@@ -1012,7 +1014,7 @@
              {
                  int i = (this.func_70660_b(MobEffects.field_76429_m).func_76458_c() + 1) * 5;
                  int j = 25 - i;
-@@ -1441,34 +1574,202 @@
+@@ -1441,34 +1576,202 @@
  
      protected void func_70665_d(DamageSource p_70665_1_, float p_70665_2_)
      {
@@ -1230,7 +1232,7 @@
          }
          else if (this.field_70717_bb != null)
          {
-@@ -1487,12 +1788,12 @@
+@@ -1487,12 +1790,12 @@
  
      public final int func_85035_bI()
      {
@@ -1245,7 +1247,7 @@
      }
  
      private int func_82166_i()
-@@ -1509,6 +1810,11 @@
+@@ -1509,6 +1812,11 @@
  
      public void func_184609_a(EnumHand p_184609_1_)
      {
@@ -1257,7 +1259,7 @@
          if (!this.field_82175_bq || this.field_110158_av >= this.func_82166_i() / 2 || this.field_110158_av < 0)
          {
              this.field_110158_av = -1;
-@@ -1523,14 +1829,40 @@
+@@ -1523,14 +1831,40 @@
      }
  
      @SideOnly(Side.CLIENT)
@@ -1300,7 +1302,7 @@
          {
              this.field_70721_aZ = 1.5F;
              this.field_70172_ad = this.field_70771_an;
-@@ -1540,9 +1872,7 @@
+@@ -1540,9 +1874,7 @@
  
              if (flag)
              {
@@ -1311,7 +1313,7 @@
              }
  
              DamageSource damagesource;
-@@ -1560,42 +1890,17 @@
+@@ -1560,42 +1892,17 @@
                  damagesource = DamageSource.field_76377_j;
              }
  
@@ -1356,7 +1358,7 @@
      protected void func_70076_C()
      {
          this.func_70097_a(DamageSource.field_76380_i, 4.0F);
-@@ -1633,6 +1938,7 @@
+@@ -1633,6 +1940,7 @@
          if (this.field_110155_d == null)
          {
              this.field_110155_d = new AttributeMap();
@@ -1364,7 +1366,7 @@
          }
  
          return this.field_110155_d;
-@@ -1691,15 +1997,12 @@
+@@ -1691,15 +1999,12 @@
          return !this.func_184582_a(p_190630_1_).func_190926_b();
      }
  
@@ -1380,7 +1382,7 @@
      public void func_70031_b(boolean p_70031_1_)
      {
          super.func_70031_b(p_70031_1_);
-@@ -1723,9 +2026,7 @@
+@@ -1723,9 +2028,7 @@
  
      protected float func_70647_i()
      {
@@ -1391,7 +1393,7 @@
      }
  
      protected boolean func_70610_aX()
-@@ -1746,18 +2047,11 @@
+@@ -1746,18 +2049,11 @@
              {
                  EnumFacing enumfacing = enumfacing1.func_176746_e();
                  int[][] aint1 = new int[][] {{0, 1}, {0, -1}, { -1, 1}, { -1, -1}, {1, 1}, {1, -1}, { -1, 0}, {1, 0}, {0, 1}};
@@ -1413,7 +1415,7 @@
  
                  for (int[] aint : aint1)
                  {
-@@ -1765,31 +2059,29 @@
+@@ -1765,31 +2061,29 @@
                      double d10 = (double)(enumfacing1.func_82599_e() * aint[0] + enumfacing.func_82599_e() * aint[1]);
                      double d11 = d5 + d9;
                      double d12 = d6 + d10;
@@ -1453,7 +1455,7 @@
                          d14 = d12;
                      }
                  }
-@@ -1799,7 +2091,7 @@
+@@ -1799,7 +2093,7 @@
          }
          else
          {
@@ -1462,7 +1464,7 @@
              float f;
  
              if (p_110145_1_ instanceof EntityBoat)
-@@ -1808,30 +2100,29 @@
+@@ -1808,30 +2102,29 @@
              }
              else
              {
@@ -1499,7 +1501,7 @@
      public boolean func_94059_bO()
      {
          return this.func_174833_aM();
-@@ -1853,22 +2144,23 @@
+@@ -1853,22 +2146,23 @@
  
          if (this.func_70051_ag())
          {
@@ -1526,7 +1528,7 @@
      }
  
      protected float func_189749_co()
-@@ -1886,23 +2178,23 @@
+@@ -1886,23 +2180,23 @@
                  {
                      if (this.func_184613_cA())
                      {
@@ -1556,7 +1558,7 @@
                              this.field_70181_x += d2;
                              this.field_70159_w += vec3d.field_72450_a * d2 / d6;
                              this.field_70179_y += vec3d.field_72449_c * d2 / d6;
-@@ -1910,28 +2202,28 @@
+@@ -1910,28 +2204,28 @@
  
                          if (f < 0.0F)
                          {
@@ -1594,7 +1596,7 @@
  
                              if (f5 > 0.0F)
                              {
-@@ -1942,19 +2234,19 @@
+@@ -1942,19 +2236,19 @@
  
                          if (this.field_70122_E && !this.field_70170_p.field_72995_K)
                          {
@@ -1619,7 +1621,7 @@
                          }
  
                          float f7 = 0.16277136F / (f6 * f6 * f6);
-@@ -1974,32 +2266,27 @@
+@@ -1974,32 +2268,27 @@
  
                          if (this.field_70122_E)
                          {
@@ -1660,7 +1662,7 @@
                              }
                          }
  
-@@ -2007,37 +2294,35 @@
+@@ -2007,37 +2296,35 @@
  
                          if (this.field_70123_F && this.func_70617_f_())
                          {
@@ -1707,7 +1709,7 @@
                          this.field_70159_w *= (double)f6;
                          this.field_70179_y *= (double)f6;
                          blockpos$pooledmutableblockpos.func_185344_t();
-@@ -2048,18 +2333,18 @@
+@@ -2048,18 +2335,18 @@
                      double d4 = this.field_70163_u;
                      this.func_191958_b(p_191986_1_, p_191986_2_, p_191986_3_, 0.02F);
                      this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
@@ -1732,7 +1734,7 @@
                      }
                  }
              }
-@@ -2089,17 +2374,17 @@
+@@ -2089,17 +2376,17 @@
                  this.func_191958_b(p_191986_1_, p_191986_2_, p_191986_3_, f2);
                  this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
                  this.field_70159_w *= (double)f1;
@@ -1754,7 +1756,7 @@
                  }
              }
          }
-@@ -2107,7 +2392,7 @@
+@@ -2107,7 +2394,7 @@
          this.field_184618_aE = this.field_70721_aZ;
          double d5 = this.field_70165_t - this.field_70169_q;
          double d7 = this.field_70161_v - this.field_70166_s;
@@ -1763,7 +1765,7 @@
          float f10 = MathHelper.func_76133_a(d5 * d5 + d9 * d9 + d7 * d7) * 4.0F;
  
          if (f10 > 1.0F)
-@@ -2140,9 +2425,10 @@
+@@ -2140,9 +2427,10 @@
          return false;
      }
  
@@ -1775,7 +1777,7 @@
          super.func_70071_h_();
          this.func_184608_ct();
  
-@@ -2185,9 +2471,9 @@
+@@ -2185,9 +2473,9 @@
  
                  if (!ItemStack.func_77989_b(itemstack1, itemstack))
                  {
@@ -1788,7 +1790,7 @@
  
                      if (!itemstack.func_190926_b())
                      {
-@@ -2202,12 +2488,10 @@
+@@ -2202,12 +2490,10 @@
                      switch (entityequipmentslot.func_188453_a())
                      {
                          case HAND:
@@ -1803,7 +1805,7 @@
                      }
                  }
              }
-@@ -2228,7 +2512,9 @@
+@@ -2228,7 +2514,9 @@
              }
          }
  
@@ -1813,7 +1815,7 @@
          double d0 = this.field_70165_t - this.field_70169_q;
          double d1 = this.field_70161_v - this.field_70166_s;
          float f3 = (float)(d0 * d0 + d1 * d1);
-@@ -2241,7 +2527,7 @@
+@@ -2241,7 +2529,7 @@
          {
              f = 1.0F;
              f5 = (float)Math.sqrt((double)f3) * 3.0F;
@@ -1822,7 +1824,7 @@
              float f2 = MathHelper.func_76135_e(MathHelper.func_76142_g(this.field_70177_z) - f1);
  
              if (95.0F < f2 && f2 < 265.0F)
-@@ -2321,6 +2607,7 @@
+@@ -2321,6 +2609,7 @@
          {
              this.field_184629_bo = 0;
          }
@@ -1830,7 +1832,7 @@
      }
  
      protected float func_110146_f(float p_110146_1_, float p_110146_2_)
-@@ -2376,28 +2663,28 @@
+@@ -2376,28 +2665,28 @@
          }
          else if (!this.func_70613_aW())
          {
@@ -1878,7 +1880,7 @@
          if (this.func_70610_aX())
          {
              this.field_70703_bu = false;
-@@ -2411,6 +2698,7 @@
+@@ -2411,6 +2700,7 @@
              this.func_70626_be();
              this.field_70170_p.field_72984_F.func_76319_b();
          }
@@ -1886,7 +1888,7 @@
  
          this.field_70170_p.field_72984_F.func_76319_b();
          this.field_70170_p.field_72984_F.func_76320_a("jump");
-@@ -2442,10 +2730,14 @@
+@@ -2442,10 +2732,14 @@
          this.field_191988_bg *= 0.98F;
          this.field_70704_bt *= 0.9F;
          this.func_184616_r();
@@ -1901,7 +1903,7 @@
          this.field_70170_p.field_72984_F.func_76319_b();
      }
  
-@@ -2478,7 +2770,8 @@
+@@ -2478,7 +2772,8 @@
  
          if (!this.field_70170_p.field_72995_K)
          {
@@ -1911,7 +1913,7 @@
          }
      }
  
-@@ -2500,7 +2793,7 @@
+@@ -2500,7 +2795,7 @@
  
                  for (int k = 0; k < list.size(); ++k)
                  {
@@ -1920,7 +1922,7 @@
                      {
                          ++j;
                      }
-@@ -2512,9 +2805,13 @@
+@@ -2512,9 +2807,13 @@
                  }
              }
  
@@ -1935,7 +1937,7 @@
                  this.func_82167_n(entity);
              }
          }
-@@ -2525,7 +2822,6 @@
+@@ -2525,7 +2824,6 @@
          p_82167_1_.func_70108_f(this);
      }
  
@@ -1943,7 +1945,7 @@
      public void func_184210_p()
      {
          Entity entity = this.func_184187_bx();
-@@ -2537,7 +2833,6 @@
+@@ -2537,7 +2835,6 @@
          }
      }
  
@@ -1951,7 +1953,7 @@
      public void func_70098_U()
      {
          super.func_70098_U();
-@@ -2547,10 +2842,7 @@
+@@ -2547,10 +2844,7 @@
      }
  
      @SideOnly(Side.CLIENT)
@@ -1963,7 +1965,7 @@
      {
          this.field_184623_bh = p_180426_1_;
          this.field_184624_bi = p_180426_3_;
-@@ -2580,18 +2872,9 @@
+@@ -2580,18 +2874,9 @@
  
      public boolean func_70685_l(Entity p_70685_1_)
      {
@@ -1983,7 +1985,7 @@
      public Vec3d func_70676_i(float p_70676_1_)
      {
          if (p_70676_1_ == 1.0F)
-@@ -2624,37 +2907,31 @@
+@@ -2624,37 +2909,31 @@
          return !this.field_70170_p.field_72995_K;
      }
  
@@ -2023,7 +2025,7 @@
      public void func_181013_g(float p_181013_1_)
      {
          this.field_70761_aq = p_181013_1_;
-@@ -2688,16 +2965,50 @@
+@@ -2688,16 +2967,50 @@
          this.field_70752_e = true;
      }
  
@@ -2076,7 +2078,7 @@
      }
  
      protected void func_184608_ct()
-@@ -2705,15 +3016,23 @@
+@@ -2705,15 +3018,23 @@
          if (this.func_184587_cr())
          {
              ItemStack itemstack = this.func_184586_b(this.func_184600_cs());
@@ -2101,7 +2103,7 @@
                  {
                      this.func_71036_o();
                  }
-@@ -2731,8 +3050,10 @@
+@@ -2731,8 +3052,10 @@
  
          if (!itemstack.func_190926_b() && !this.func_184587_cr())
          {
@@ -2113,7 +2115,7 @@
  
              if (!this.field_70170_p.field_72995_K)
              {
-@@ -2743,12 +3064,11 @@
+@@ -2743,12 +3066,11 @@
                      i |= 2;
                  }
  
@@ -2127,7 +2129,7 @@
      public void func_184206_a(DataParameter<?> p_184206_1_)
      {
          super.func_184206_a(p_184206_1_);
-@@ -2785,51 +3105,26 @@
+@@ -2785,51 +3107,26 @@
              {
                  for (int i = 0; i < p_184584_2_; ++i)
                  {
@@ -2189,7 +2191,7 @@
              }
          }
      }
-@@ -2839,7 +3134,27 @@
+@@ -2839,7 +3136,27 @@
          if (!this.field_184627_bm.func_190926_b() && this.func_184587_cr())
          {
              this.func_184584_a(this.field_184627_bm, 16);
@@ -2218,7 +2220,7 @@
              this.func_184602_cy();
          }
      }
-@@ -2863,7 +3178,8 @@
+@@ -2863,7 +3180,8 @@
      {
          if (!this.field_184627_bm.func_190926_b())
          {
@@ -2228,7 +2230,7 @@
          }
  
          this.func_184602_cy();
-@@ -2873,7 +3189,7 @@
+@@ -2873,7 +3191,7 @@
      {
          if (!this.field_70170_p.field_72995_K)
          {
@@ -2237,7 +2239,7 @@
          }
  
          this.field_184627_bm = ItemStack.field_190927_a;
-@@ -2947,11 +3263,14 @@
+@@ -2947,11 +3265,14 @@
  
              if (flag1)
              {
@@ -2257,7 +2259,7 @@
                  }
              }
          }
-@@ -2967,13 +3286,13 @@
+@@ -2967,13 +3288,13 @@
  
              for (int j = 0; j < 128; ++j)
              {
@@ -2274,7 +2276,7 @@
                  world.func_175688_a(EnumParticleTypes.PORTAL, d3, d4, d5, (double)f, (double)f1, (double)f2);
              }
  
-@@ -2986,11 +3305,41 @@
+@@ -2986,11 +3307,41 @@
          }
      }
  
@@ -2316,7 +2318,7 @@
      public boolean func_190631_cK()
      {
          return true;
-@@ -2999,5 +3348,31 @@
+@@ -2999,5 +3350,31 @@
      @SideOnly(Side.CLIENT)
      public void func_191987_a(BlockPos p_191987_1_, boolean p_191987_2_)
      {

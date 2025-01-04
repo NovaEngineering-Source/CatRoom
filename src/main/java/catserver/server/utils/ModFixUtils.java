@@ -2,9 +2,12 @@ package catserver.server.utils;
 
 import catserver.server.CatServer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,23 +53,59 @@ public class ModFixUtils {
     }
 
     public static void fixCBRespawnLogic(EntityPlayerMP playerIn) {
-        try {
-            playerIn.getDataManager().lock.writeLock().lock();
-            playerIn.getDataManager().entries.clear();
-        } finally {
-            playerIn.getDataManager().lock.writeLock().unlock();
-        }
-        playerIn.getDataManager().empty = true;
-        playerIn.getDataManager().setClean();
-        // [VanillaCopy] Entity data params from Entity#<init>
-        playerIn.getDataManager().register(Entity.FLAGS, Byte.valueOf((byte)0));
-        playerIn.getDataManager().register(Entity.AIR, Integer.valueOf(300));
-        playerIn.getDataManager().register(Entity.CUSTOM_NAME_VISIBLE, Boolean.valueOf(false));
-        playerIn.getDataManager().register(Entity.CUSTOM_NAME, "");
-        playerIn.getDataManager().register(Entity.SILENT, Boolean.valueOf(false));
-        playerIn.getDataManager().register(Entity.NO_GRAVITY, Boolean.valueOf(false));
+        final EntityDataManager dataManager = playerIn.getDataManager();
+        // Capture vanilla values
+        // Entity
+        byte capturedFlags = dataManager.get(Entity.FLAGS);
+        int capturedAirTicks = dataManager.get(Entity.AIR);
+        String capturedCustomName = dataManager.get(Entity.CUSTOM_NAME);
+        boolean capturedCustomNameVisible = dataManager.get(Entity.CUSTOM_NAME_VISIBLE);
+        boolean capturedSilent = dataManager.get(Entity.SILENT);
+        boolean capturedNoGravity = dataManager.get(Entity.NO_GRAVITY);
+        // EntityLivingBase
+        byte capturedHandStates = dataManager.get(EntityLivingBase.HAND_STATES);
+        float capturedHealth = dataManager.get(EntityLivingBase.HEALTH);
+        int capturedPotionEffects = dataManager.get(EntityLivingBase.POTION_EFFECTS);
+        boolean capturedHideParticles = dataManager.get(EntityLivingBase.HIDE_PARTICLES);
+        int capturedArrowCount = dataManager.get(EntityLivingBase.ARROW_COUNT_IN_ENTITY);
+        // EntityPlayer
+        float capturedAbsorptionAmount = dataManager.get(EntityPlayer.ABSORPTION);
+        int capturedScore = dataManager.get(EntityPlayer.PLAYER_SCORE);
+        byte capturedPlayerModelFlag = dataManager.get(EntityPlayer.PLAYER_MODEL_FLAG);
+        byte capturedMainHand = dataManager.get(EntityPlayer.MAIN_HAND);
+        NBTTagCompound capturedLeftShoulder = dataManager.get(EntityPlayer.LEFT_SHOULDER_ENTITY);
+        NBTTagCompound capturedRightShoulder = dataManager.get(EntityPlayer.RIGHT_SHOULDER_ENTITY);
 
-        playerIn.entityInit();
+        try {
+            dataManager.lock.writeLock().lock();
+            dataManager.entries.clear();
+        } finally {
+            dataManager.lock.writeLock().unlock();
+        }
+        dataManager.empty = true;
+        dataManager.setClean();
+
+        // Restore captured vanilla values
+        // Entity
+        dataManager.register(Entity.FLAGS, capturedFlags);
+        dataManager.register(Entity.AIR, capturedAirTicks);
+        dataManager.register(Entity.CUSTOM_NAME_VISIBLE, capturedCustomNameVisible);
+        dataManager.register(Entity.CUSTOM_NAME, capturedCustomName);
+        dataManager.register(Entity.SILENT, capturedSilent);
+        dataManager.register(Entity.NO_GRAVITY, capturedNoGravity);
+        // EntityLivingBase
+        dataManager.register(EntityLivingBase.HAND_STATES, capturedHandStates);
+        dataManager.register(EntityLivingBase.HEALTH, capturedHealth);
+        dataManager.register(EntityLivingBase.POTION_EFFECTS, capturedPotionEffects);
+        dataManager.register(EntityLivingBase.HIDE_PARTICLES, capturedHideParticles);
+        dataManager.register(EntityLivingBase.ARROW_COUNT_IN_ENTITY, capturedArrowCount);
+        // EntityPlayer
+        dataManager.register(EntityPlayer.ABSORPTION, capturedAbsorptionAmount);
+        dataManager.register(EntityPlayer.PLAYER_SCORE, capturedScore);
+        dataManager.register(EntityPlayer.PLAYER_MODEL_FLAG, capturedPlayerModelFlag);
+        dataManager.register(EntityPlayer.MAIN_HAND, capturedMainHand);
+        dataManager.register(EntityPlayer.LEFT_SHOULDER_ENTITY, capturedLeftShoulder);
+        dataManager.register(EntityPlayer.RIGHT_SHOULDER_ENTITY, capturedRightShoulder);
 
         MinecraftForge.EVENT_BUS.post(new EntityEvent.EntityConstructing(playerIn));
         ((Entity) playerIn).capabilities = ForgeEventFactory.gatherCapabilities(playerIn);
