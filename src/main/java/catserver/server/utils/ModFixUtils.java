@@ -52,7 +52,7 @@ public class ModFixUtils {
         }
     }
 
-    public static void fixCBRespawnLogic(EntityPlayerMP playerIn) {
+    public static void simulateVanillaRespawn(EntityPlayerMP playerIn) {
         final EntityDataManager dataManager = playerIn.getDataManager();
         // Capture vanilla values
         // Entity
@@ -108,6 +108,9 @@ public class ModFixUtils {
         dataManager.register(EntityPlayer.RIGHT_SHOULDER_ENTITY, capturedRightShoulder);
 
         MinecraftForge.EVENT_BUS.post(new EntityEvent.EntityConstructing(playerIn));
+    }
+
+    public static void regatherCapabilities(EntityPlayerMP playerIn) {
         ((Entity) playerIn).capabilities = ForgeEventFactory.gatherCapabilities(playerIn);
     }
 }
