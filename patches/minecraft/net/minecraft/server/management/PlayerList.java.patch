@@ -644,7 +644,7 @@
          }
  
          PlayerInteractionManager playerinteractionmanager;
-@@ -497,101 +742,232 @@
+@@ -497,101 +742,231 @@
          return new EntityPlayerMP(this.field_72400_f, this.field_72400_f.func_71218_a(0), p_148545_1_, playerinteractionmanager);
      }
  
@@ -779,12 +779,11 @@
 +        EntityPlayerMP entityplayermp = new EntityPlayerMP(this.mcServer, this.mcServer.getWorld(playerIn.dimension), playerIn.getGameProfile(), playerinteractionmanager);
 +        */
 +        EntityPlayerMP entityplayermp = playerIn;
-+        // CatRoom start - Call construct event and re-gather capabilities
++        // CatRoom start - Fix CB respawn logic
 +        if (catserver.server.CatServer.getConfig().callConstructCapabilityEventOnRespawn) {
-+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.EntityEvent.EntityConstructing(entityplayermp));
-+            ((Entity) entityplayermp).capabilities = net.minecraftforge.event.ForgeEventFactory.gatherCapabilities(entityplayermp);
++            catserver.server.utils.ModFixUtils.fixCBRespawnLogic(entityplayermp);
 +        }
-+        // CatRoom end - Call construct event and re-gather capabilities
++        // CatRoom end - Fix CB respawn logic
 +        org.bukkit.World fromWorld = playerIn.getBukkitEntity().getWorld();
 +        playerIn.field_71136_j = false;
 +
@@ -948,7 +947,7 @@
          return entityplayermp;
      }
  
-@@ -599,75 +975,147 @@
+@@ -599,75 +974,147 @@
      {
          GameProfile gameprofile = p_187243_1_.func_146103_bH();
          int i = this.func_152596_g(gameprofile) ? this.field_72414_i.func_187452_a(gameprofile) : 0;
@@ -1151,7 +1150,7 @@
          {
              BlockPos blockpos;
  
-@@ -693,7 +1141,7 @@
+@@ -693,7 +1140,7 @@
  
          p_82448_3_.field_72984_F.func_76319_b();
  
@@ -1160,7 +1159,7 @@
          {
              p_82448_3_.field_72984_F.func_76320_a("placing");
              d0 = (double)MathHelper.func_76125_a((int)d0, -29999872, 29999872);
-@@ -702,7 +1150,8 @@
+@@ -702,7 +1149,8 @@
              if (p_82448_1_.func_70089_S())
              {
                  p_82448_1_.func_70012_b(d0, p_82448_1_.field_70163_u, d1, p_82448_1_.field_70177_z, p_82448_1_.field_70125_A);
@@ -1170,7 +1169,7 @@
                  p_82448_4_.func_72838_d(p_82448_1_);
                  p_82448_4_.func_72866_a(p_82448_1_, false);
              }
-@@ -713,11 +1162,155 @@
+@@ -713,11 +1161,155 @@
          p_82448_1_.func_70029_a(p_82448_4_);
      }
  
@@ -1327,7 +1326,7 @@
              this.field_72408_o = 0;
          }
      }
-@@ -726,9 +1319,27 @@
+@@ -726,9 +1318,27 @@
      {
          for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
@@ -1358,7 +1357,7 @@
  
      public void func_148537_a(Packet<?> p_148537_1_, int p_148537_2_)
      {
-@@ -795,11 +1406,11 @@
+@@ -795,11 +1405,11 @@
                  s = s + ", ";
              }
  
@@ -1372,7 +1371,7 @@
              }
          }
  
-@@ -812,7 +1423,7 @@
+@@ -812,7 +1422,7 @@
  
          for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
@@ -1381,7 +1380,7 @@
          }
  
          return astring;
-@@ -824,7 +1435,7 @@
+@@ -824,7 +1434,7 @@
  
          for (int i = 0; i < this.field_72404_b.size(); ++i)
          {
@@ -1390,7 +1389,7 @@
          }
  
          return agameprofile;
-@@ -845,12 +1456,20 @@
+@@ -845,12 +1455,20 @@
          int i = this.field_72400_f.func_110455_j();
          this.field_72414_i.func_152687_a(new UserListOpsEntry(p_152605_1_, this.field_72400_f.func_110455_j(), this.field_72414_i.func_183026_b(p_152605_1_)));
          this.func_187245_a(this.func_177451_a(p_152605_1_.getId()), i);
@@ -1411,7 +1410,7 @@
      }
  
      private void func_187245_a(EntityPlayerMP p_187245_1_, int p_187245_2_)
-@@ -883,11 +1502,7 @@
+@@ -883,11 +1501,7 @@
  
      public boolean func_152596_g(GameProfile p_152596_1_)
      {
@@ -1424,7 +1423,7 @@
      }
  
      @Nullable
-@@ -904,19 +1519,17 @@
+@@ -904,19 +1518,17 @@
          return null;
      }
  
@@ -1451,7 +1450,7 @@
  
              if (entityplayermp != p_148543_1_ && entityplayermp.field_71093_bK == p_148543_10_)
              {
-@@ -976,25 +1589,29 @@
+@@ -976,25 +1588,29 @@
  
      public void func_72354_b(EntityPlayerMP p_72354_1_, WorldServer p_72354_2_)
      {
@@ -1488,7 +1487,7 @@
          p_72385_1_.field_71135_a.func_147359_a(new SPacketHeldItemChange(p_72385_1_.field_71071_by.field_70461_c));
      }
  
-@@ -1010,13 +1627,7 @@
+@@ -1010,13 +1626,7 @@
  
      public String[] func_72373_m()
      {
@@ -1503,7 +1502,7 @@
      }
  
      public void func_72371_a(boolean p_72371_1_)
-@@ -1026,7 +1637,7 @@
+@@ -1026,7 +1636,7 @@
  
      public List<EntityPlayerMP> func_72382_j(String p_72382_1_)
      {
@@ -1512,7 +1511,7 @@
  
          for (EntityPlayerMP entityplayermp : this.field_72404_b)
          {
-@@ -1082,9 +1693,15 @@
+@@ -1082,9 +1692,15 @@
  
      public void func_72392_r()
      {
@@ -1531,7 +1530,7 @@
          }
      }
  
-@@ -1092,7 +1709,10 @@
+@@ -1092,7 +1708,10 @@
      {
          this.field_72400_f.func_145747_a(p_148544_1_);
          ChatType chattype = p_148544_2_ ? ChatType.SYSTEM : ChatType.CHAT;
@@ -1543,7 +1542,7 @@
      }
  
      public void func_148539_a(ITextComponent p_148539_1_)
-@@ -1100,10 +1720,11 @@
+@@ -1100,10 +1719,11 @@
          this.func_148544_a(p_148539_1_, true);
      }
  
@@ -1556,7 +1555,7 @@
  
          if (statisticsmanagerserver == null)
          {
-@@ -1128,6 +1749,8 @@
+@@ -1128,6 +1748,8 @@
          return statisticsmanagerserver;
      }
  
@@ -1565,7 +1564,7 @@
      public PlayerAdvancements func_192054_h(EntityPlayerMP p_192054_1_)
      {
          UUID uuid = p_192054_1_.func_110124_au();
-@@ -1151,7 +1774,7 @@
+@@ -1151,7 +1773,7 @@
  
          if (this.field_72400_f.field_71305_c != null)
          {
@@ -1574,7 +1573,7 @@
              {
                  if (worldserver != null)
                  {
-@@ -1183,5 +1806,11 @@
+@@ -1183,5 +1805,11 @@
          {
              playeradvancements.func_193766_b();
          }

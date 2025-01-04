@@ -103,7 +103,8 @@
      }
  
 -    @Override
-     protected void func_70088_a()
+-    protected void func_70088_a()
++    public void func_70088_a() // CatRoom - protected -> public
      {
          super.func_70088_a();
 -        this.field_70180_af.func_187214_a(field_184829_a, 0.0F);
