@@ -33,7 +33,7 @@ public class ModFixUtils {
         }
     }
 
-    @SuppressWarnings("unused") // Used by ModCompatibleTransformer
+    @SuppressWarnings("unused") // Used by ModsCompatibleTransformer
     public static void hookFirstAidHealthUpdate(EntityPlayer player, DataParameter key, Object value) {
         if (key.equals(EntityPlayer.HEALTH)) {
             float health = (float)value;
@@ -89,8 +89,8 @@ public class ModFixUtils {
         // Entity
         dataManager.register(Entity.FLAGS, capturedFlags);
         dataManager.register(Entity.AIR, capturedAirTicks);
-        dataManager.register(Entity.CUSTOM_NAME_VISIBLE, capturedCustomNameVisible);
         dataManager.register(Entity.CUSTOM_NAME, capturedCustomName);
+        dataManager.register(Entity.CUSTOM_NAME_VISIBLE, capturedCustomNameVisible);
         dataManager.register(Entity.SILENT, capturedSilent);
         dataManager.register(Entity.NO_GRAVITY, capturedNoGravity);
         // EntityLivingBase
