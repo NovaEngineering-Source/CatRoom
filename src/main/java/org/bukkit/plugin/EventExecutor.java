@@ -12,11 +12,9 @@ import org.bukkit.event.Listener;
 
 import com.google.common.base.Preconditions;
 
-// CatRoom start
 import catserver.server.executor.hiddenclass.BukkitEventExecutorFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Bukkit;
-// CatRoom end
 
 /**
  * Interface which defines the class for event call backs to plugins
@@ -24,6 +22,7 @@ import org.bukkit.Bukkit;
 public interface EventExecutor {
     public void execute(Listener listener, Event event) throws EventException;
 
+    /*
     ConcurrentMap<Method, Class<? extends EventExecutor>> eventExecutorMap = new ConcurrentHashMap<Method, Class<? extends EventExecutor>>() {
         @Override
         public Class<? extends EventExecutor> computeIfAbsent(Method key, Function<? super Method, ? extends Class<? extends EventExecutor>> mappingFunction) {
@@ -41,6 +40,7 @@ public interface EventExecutor {
             }
         }
     };
+     */ // CatRoom - Use hidden class for event executors
 
     public static EventExecutor create(Method m, Class<? extends Event> eventClass) {
         Preconditions.checkNotNull(m, "Null method");

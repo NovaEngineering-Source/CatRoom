@@ -1,12 +1,9 @@
 package catserver.server.command.internal;
 
 import catserver.server.CatServer;
-// CatRoom start - Dump item command
 import catserver.server.utils.ItemStackUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.item.ItemStack;
-// CatRoom end - Dump item command
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import org.bukkit.Bukkit;
@@ -14,10 +11,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
-// CatRoom start - Dump item command
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-// CatRoom end - Dump item command
 
 public class CommandCatserver extends Command {
     public CommandCatserver(String name) {
