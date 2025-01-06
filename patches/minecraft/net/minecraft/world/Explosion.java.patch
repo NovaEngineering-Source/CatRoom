@@ -37,7 +37,7 @@
 -    private final List<BlockPos> field_77281_g = Lists.newArrayList();
 -    private final Map<EntityPlayer, Vec3d> field_77288_k = Maps.newHashMap();
 +    public final Entity field_77283_e;
-+    public float field_77280_f; // CatRoom - private final -> public
++    public final float field_77280_f; // CatRoom - private -> public
 +    private final List<BlockPos> field_77281_g;
 +    private final Map<EntityPlayer, Vec3d> field_77288_k;
 +    private final Vec3d position;
