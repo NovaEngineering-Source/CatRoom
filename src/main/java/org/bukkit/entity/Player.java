@@ -2,6 +2,7 @@ package org.bukkit.entity;
 
 import java.net.InetSocketAddress;
 
+import catserver.api.annotation.Backported;
 import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -1441,7 +1442,7 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
      *
      * @return player ping
      */
-    @catserver.api.annotation.Backported(from = "1.17")
+    @Backported(from = "1.17")
     public int getPing();
     // CatRoom end - Backport APIs
 
