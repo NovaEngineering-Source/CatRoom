@@ -134,25 +134,72 @@
              long i = ChunkPos.func_77272_a(p_186025_1_, p_186025_2_);
  
              try
-@@ -117,14 +156,15 @@
+@@ -117,18 +156,52 @@
                  CrashReport crashreport = CrashReport.func_85055_a(throwable, "Exception generating new chunk");
                  CrashReportCategory crashreportcategory = crashreport.func_85058_a("Chunk to be generated");
                  crashreportcategory.func_71507_a("Location", String.format("%d,%d", p_186025_1_, p_186025_2_));
 -                crashreportcategory.func_71507_a("Position hash", i);
-+                crashreportcategory.func_71507_a("Position hash", Long.valueOf(i));
-                 crashreportcategory.func_71507_a("Generator", this.field_186029_c);
-                 throw new ReportedException(crashreport);
-             }
- 
-             this.field_73244_f.put(i, chunk);
-             chunk.func_76631_c();
+-                crashreportcategory.func_71507_a("Generator", this.field_186029_c);
+-                throw new ReportedException(crashreport);
+-            }
+-
+-            this.field_73244_f.put(i, chunk);
+-            chunk.func_76631_c();
 -            chunk.func_186030_a(this, this.field_186029_c);
+-        }
+-
+-        return chunk;
+-    }
++                crashreportcategory.func_71507_a("Position hash", Long.valueOf(i));
++                crashreportcategory.func_71507_a("Generator", this.field_186029_c);
++                throw new ReportedException(crashreport);
++            }
++
++            this.field_73244_f.put(i, chunk);
++            chunk.func_76631_c();
 +            chunk.populateCB(this, this.field_186029_c, true);
 +            field_73251_h.timings.syncChunkLoadTimer.stopTiming(); // Spigot
-         }
++        }
++
++        return chunk;
++    }
++
++    // CatServer start
++    public Chunk provideChunk(int x, int z, Runnable runnable) {
++        return provideChunk(x, z, runnable, true);
++    }
++
++    public Chunk provideChunk(int x, int z, Runnable runnable, boolean generate) {
++        Chunk chunk = this.loadChunk(x, z, runnable);
++
++        if (chunk == null && generate) {
++            field_73251_h.timings.syncChunkLoadTimer.startTiming(); // Spigot
++            long i = ChunkPos.func_77272_a(x, z);
++
++            try {
++                chunk = this.field_186029_c.func_185932_a(x, z);
++            } catch (Throwable throwable) {
++                CrashReport crashreport = CrashReport.func_85055_a(throwable, "Exception generating new chunk");
++                CrashReportCategory crashreportcategory = crashreport.func_85058_a("Chunk to be generated");
++                crashreportcategory.func_71507_a("Location", String.format("%d,%d", x, z));
++                crashreportcategory.func_71507_a("Position hash", Long.valueOf(i));
++                crashreportcategory.func_71507_a("Generator", this.field_186029_c);
++                throw new ReportedException(crashreport);
++            }
++
++            this.field_73244_f.put(i, chunk);
++            chunk.func_76631_c();
++            chunk.populateCB(this, this.field_186029_c, true);
++            field_73251_h.timings.syncChunkLoadTimer.stopTiming(); // Spigot
++        }
++
++        return chunk;
++    }
++    // CatServer end
  
-         return chunk;
-@@ -199,8 +239,9 @@
+     @Nullable
+     private Chunk func_73239_e(int p_73239_1_, int p_73239_2_)
+@@ -199,8 +272,9 @@
              {
                  this.func_73242_b(chunk);
                  chunk.func_177427_f(false);
@@ -163,7 +210,7 @@
                  {
                      return false;
                  }
-@@ -215,30 +256,51 @@
+@@ -215,30 +289,51 @@
          this.field_73247_e.func_75818_b();
      }
  
@@ -223,7 +270,7 @@
  
              this.field_73247_e.func_75817_a();
          }
-@@ -246,12 +308,44 @@
+@@ -246,12 +341,44 @@
          return false;
      }
  
@@ -269,7 +316,7 @@
      public String func_73148_d()
      {
          return "ServerChunkCache: " + this.field_73244_f.size() + " Drop: " + this.field_73248_b.size();
-@@ -283,7 +377,6 @@
+@@ -283,7 +410,6 @@
          return this.field_73244_f.containsKey(ChunkPos.func_77272_a(p_73149_1_, p_73149_2_));
      }
  
