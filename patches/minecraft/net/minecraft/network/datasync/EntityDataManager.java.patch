@@ -9,7 +9,7 @@
  import net.minecraft.crash.CrashReport;
  import net.minecraft.crash.CrashReportCategory;
  import net.minecraft.entity.Entity;
-@@ -24,11 +26,11 @@
+@@ -24,9 +26,9 @@
  public class EntityDataManager
  {
      private static final Logger field_190303_a = LogManager.getLogger();
@@ -17,14 +17,10 @@
 +    private static final Map < Class <? extends Entity > , Integer > field_187232_a = Maps. < Class <? extends Entity > , Integer > newHashMap();
      private final Entity field_187233_b;
 -    private final Map < Integer, EntityDataManager.DataEntry<? >> field_187234_c = Maps.newHashMap();
--    private final ReadWriteLock field_187235_d = new ReentrantReadWriteLock();
--    private boolean field_187236_e = true;
-+    public final Map < Integer, DataEntry<? >> field_187234_c = new Int2ObjectOpenHashMap<>(); // Paper // CatRoom - private -> public
-+    public final ReadWriteLock field_187235_d = new ReentrantReadWriteLock(); // CatRoom - private -> public
-+    public boolean field_187236_e = true; // CatRoom - private -> public
++    private final Map < Integer, DataEntry<? >> field_187234_c = new Int2ObjectOpenHashMap<>(); // Paper
+     private final ReadWriteLock field_187235_d = new ReentrantReadWriteLock();
+     private boolean field_187236_e = true;
      private boolean field_187237_f;
- 
-     public EntityDataManager(Entity p_i46840_1_)
 @@ -38,7 +40,7 @@
  
      public static <T> DataParameter<T> func_187226_a(Class <? extends Entity > p_187226_0_, DataSerializer<T> p_187226_1_)

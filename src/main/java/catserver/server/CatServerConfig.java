@@ -62,8 +62,7 @@ public class CatServerConfig {
     public boolean cachePlayerProfileResult = false;
     public int playerProfileResultCacheMinutes = 1440;
 
-    public boolean regatherCapabilityOnRespawn = false;
-    public boolean simulateVanillaRespawn = false;
+    public boolean callConstructCapabilityEventOnRespawn = false;
     public boolean bridgeForgeExplosionEventToBukkit = false;
 
     public boolean enableAffinity = false;
@@ -120,8 +119,7 @@ public class CatServerConfig {
         cachePlayerProfileResult = getOrWriteBooleanConfig("network.profile.cachePlayerProfileResult", cachePlayerProfileResult);
         playerProfileResultCacheMinutes = getOrWriteIntConfig("network.profile.playerProfileResultCacheMinutes", playerProfileResultCacheMinutes);
         // compatibility
-        regatherCapabilityOnRespawn = getOrWriteBooleanConfig("compatibility.regatherCapabilityOnRespawn", regatherCapabilityOnRespawn);
-        simulateVanillaRespawn = getOrWriteBooleanConfig("compatibility.simulateVanillaRespawn", simulateVanillaRespawn);
+        callConstructCapabilityEventOnRespawn = getOrWriteBooleanConfig("compatibility.callConstructCapabilityEventOnRespawn", callConstructCapabilityEventOnRespawn);
         bridgeForgeExplosionEventToBukkit = getOrWriteBooleanConfig("compatibility.bridgeForgeExplosionEventToBukkit", bridgeForgeExplosionEventToBukkit);
         // general
         disableUpdateGameProfile = getOrWriteBooleanConfig("disableUpdateGameProfile", disableUpdateGameProfile);
