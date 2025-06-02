@@ -26,6 +26,7 @@ public class ModFixUtils {
         }
     }
 
+    @SuppressWarnings({"unused", "rawtypes"})
     public static void hookFirstAidHealthUpdate(EntityPlayer player, DataParameter key, Object value) {
         if (key.equals(EntityPlayer.HEALTH)) {
             float health = (float)value;
