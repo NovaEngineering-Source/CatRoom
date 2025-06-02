@@ -19,19 +19,16 @@
  
  public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
  {
-@@ -48,6 +53,11 @@
-     private final String field_147334_j = "";
+@@ -49,6 +54,8 @@
      private SecretKey field_147335_k;
      private EntityPlayerMP field_181025_l;
-+    private static final com.github.benmanes.caffeine.cache.Cache<String, GameProfile> playerProfileResultCache = com.github.benmanes.caffeine.cache.Caffeine.newBuilder()
-+            .expireAfterWrite(catserver.server.CatServer.getConfig().playerProfileResultCacheMinutes, java.util.concurrent.TimeUnit.MINUTES)
-+            .build(); // CatRoom - Cache player profile result
-+
-+    public String hostname = "";
  
++    public String hostname = "";
++
      public NetHandlerLoginServer(MinecraftServer p_i45298_1_, NetworkManager p_i45298_2_)
      {
-@@ -56,7 +66,6 @@
+         this.field_147327_f = p_i45298_1_;
+@@ -56,7 +63,6 @@
          field_147329_d.nextBytes(this.field_147330_e);
      }
  
@@ -39,7 +36,7 @@
      public void func_73660_a()
      {
          if (this.field_147328_g == NetHandlerLoginServer.LoginState.READY_TO_ACCEPT)
-@@ -70,16 +79,29 @@
+@@ -70,16 +76,29 @@
              if (entityplayermp == null)
              {
                  this.field_147328_g = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;
@@ -73,7 +70,7 @@
  
      public void func_194026_b(ITextComponent p_194026_1_)
      {
-@@ -95,18 +117,48 @@
+@@ -95,18 +114,48 @@
          }
      }
  
@@ -129,7 +126,7 @@
          }
          else
          {
-@@ -133,12 +185,11 @@
+@@ -133,12 +182,11 @@
              }
              else
              {
@@ -143,7 +140,7 @@
      public void func_147231_a(ITextComponent p_147231_1_)
      {
          field_147332_c.info("{} lost connection: {}", this.func_147317_d(), p_147231_1_.func_150260_c());
-@@ -146,12 +197,9 @@
+@@ -146,12 +194,9 @@
  
      public String func_147317_d()
      {
@@ -157,25 +154,24 @@
      public void func_147316_a(CPacketLoginStart p_147316_1_)
      {
          Validate.validState(this.field_147328_g == NetHandlerLoginServer.LoginState.HELLO, "Unexpected hello packet");
-@@ -164,11 +212,24 @@
+@@ -164,11 +209,23 @@
          }
          else
          {
 -            this.field_147328_g = NetHandlerLoginServer.LoginState.READY_TO_ACCEPT;
 +            // Spigot start
-+            // CatRoom start - Virtual thread for User Authenticator
-+            Thread.ofVirtual()
-+                    .name("User Authenticator #" + NetHandlerLoginServer.field_147331_b.incrementAndGet())
-+                    .start(() -> {
-+                        try {
-+                            initUUID();
-+                            new LoginHandler().fireEvents();
-+                        } catch (Exception ex) {
-+                            disconnect("Failed to verify username!");
-+                            field_147327_f.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + field_147337_i.getName(), ex);
-+                        }
-+                    });
-+            // CatRoom end - Virtual thread for User Authenticator
++            new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + NetHandlerLoginServer.field_147331_b.incrementAndGet()) {
++                @Override
++                public void run() {
++                    try {
++                        initUUID();
++                        new LoginHandler().fireEvents();
++                    } catch (Exception ex) {
++                        disconnect("Failed to verify username!");
++                        field_147327_f.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + field_147337_i.getName(), ex);
++                    }
++                }
++            }.start();
 +            // Spigot end
          }
      }
@@ -184,15 +180,12 @@
      public void func_147315_a(CPacketEncryptionResponse p_147315_1_)
      {
          Validate.validState(this.field_147328_g == NetHandlerLoginServer.LoginState.KEY, "Unexpected key packet");
-@@ -183,32 +244,39 @@
+@@ -183,32 +240,25 @@
              this.field_147335_k = p_147315_1_.func_149300_a(privatekey);
              this.field_147328_g = NetHandlerLoginServer.LoginState.AUTHENTICATING;
              this.field_147333_a.func_150727_a(this.field_147335_k);
 -            (new Thread("User Authenticator #" + field_147331_b.incrementAndGet())
-+            // CatRoom start - Virtual thread for User Authenticator
-+            Thread.ofVirtual()
-+                    .name("User Authenticator #" + field_147331_b.incrementAndGet())
-+                    .start(new Runnable() // CatRoom end - Virtual thread for User Authenticator
++            (new Thread(net.minecraftforge.fml.common.thread.SidedThreadGroups.SERVER, "User Authenticator #" + field_147331_b.incrementAndGet())
              {
 -                @Override
                  public void run()
@@ -211,18 +204,7 @@
 -                                .func_147130_as()
 -                                .hasJoinedServer(new GameProfile(null, gameprofile.getName()), s, this.func_191235_a());
 +                        String s = (new BigInteger(CryptManager.func_75895_a("", NetHandlerLoginServer.this.field_147327_f.func_71250_E().getPublic(), NetHandlerLoginServer.this.field_147335_k))).toString(16);
-+                        // CatRoom start - Cache player profile result
-+                        if (catserver.server.CatServer.getConfig().cachePlayerProfileResult) {
-+                            GameProfile gp = playerProfileResultCache.getIfPresent(gameprofile.getName());
-+                            if (gp == null) {
-+                                gp = NetHandlerLoginServer.this.field_147327_f.func_147130_as().hasJoinedServer(new GameProfile((UUID)null, gameprofile.getName()), s, this.func_191235_a());
-+                                playerProfileResultCache.put(gameprofile.getName(), gp);
-+                            }
-+                            NetHandlerLoginServer.this.field_147337_i = gp;
-+                        } else {
-+                            NetHandlerLoginServer.this.field_147337_i = NetHandlerLoginServer.this.field_147327_f.func_147130_as().hasJoinedServer(new GameProfile((UUID) null, gameprofile.getName()), s, this.func_191235_a());
-+                        }
-+                        // CatRoom end - Cache player profile result
++                        NetHandlerLoginServer.this.field_147337_i = NetHandlerLoginServer.this.field_147327_f.func_147130_as().hasJoinedServer(new GameProfile((UUID)null, gameprofile.getName()), s, this.getAddress());
  
                          if (NetHandlerLoginServer.this.field_147337_i != null)
                          {
@@ -240,7 +222,7 @@
                          }
                          else if (NetHandlerLoginServer.this.field_147327_f.func_71264_H())
                          {
-@@ -218,11 +286,11 @@
+@@ -218,11 +268,11 @@
                          }
                          else
                          {
@@ -255,7 +237,7 @@
                      {
                          if (NetHandlerLoginServer.this.field_147327_f.func_71264_H())
                          {
-@@ -232,23 +300,67 @@
+@@ -232,23 +282,67 @@
                          }
                          else
                          {
@@ -272,7 +254,8 @@
                      }
                  }
                  @Nullable
-                 private InetAddress func_191235_a()
+-                private InetAddress func_191235_a()
++                private InetAddress getAddress()
                  {
                      SocketAddress socketaddress = NetHandlerLoginServer.this.field_147333_a.func_74430_c();
 -                    return NetHandlerLoginServer.this.field_147327_f.func_190518_ac() && socketaddress instanceof InetSocketAddress
@@ -285,7 +268,7 @@
 -    }
 +                    return NetHandlerLoginServer.this.field_147327_f.func_190518_ac() && socketaddress instanceof InetSocketAddress ? ((InetSocketAddress)socketaddress).getAddress() : null;
 +                }
-+            }); // CatRoom
++            }).start();
 +        }
 +    }
 +

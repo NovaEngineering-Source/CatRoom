@@ -1,14 +1,5 @@
 --- before/net/minecraft/world/ChunkCache.java
 +++ after/net/minecraft/world/ChunkCache.java
-@@ -34,7 +34,7 @@
-         {
-             for (int l = this.field_72816_b; l <= j; ++l)
-             {
--                this.field_72817_c[k - this.field_72818_a][l - this.field_72816_b] = p_i45746_1_.func_72964_e(k, l);
-+                this.field_72817_c[k - this.field_72818_a][l - this.field_72816_b] = p_i45746_1_.getChunkIfLoaded(k, l); // Paper
-             }
-         }
- 
 @@ -59,10 +59,9 @@
      }
  
