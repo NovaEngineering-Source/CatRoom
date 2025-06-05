@@ -19,26 +19,19 @@
 
 package net.minecraftforge.fml.common;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraftforge.fml.common.asm.transformers.ModAPITransformer;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import top.outlands.foundation.TransformerDelegate;
+
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
-import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.LaunchClassLoader;
-import net.minecraftforge.fml.common.asm.transformers.ModAPITransformer;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
-
-import org.apache.logging.log4j.Level;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 /**
  * A simple delegating class loader used to load mods into the system
@@ -55,17 +48,34 @@ public class ModClassLoader extends URLClassLoader
 
     public ModClassLoader(ClassLoader parent) {
         super(new URL[0], null);
-        if (parent instanceof LaunchClassLoader)
-        {
-            this.mainClassLoader = (LaunchClassLoader)parent;
-        }
         this.sources = Lists.newArrayList();
+
+        if (parent instanceof LaunchClassLoader) {
+            this.mainClassLoader = (LaunchClassLoader)parent;
+            File customLibFolder = new File("./libraries/customize_libraries");
+            if (!customLibFolder.exists()) customLibFolder.mkdir();
+
+            if (customLibFolder.isDirectory()) {
+                File[] files = customLibFolder.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isFile() && file.getName().endsWith(".jar")) {
+                            try {
+                                this.addFile(file);
+                                FMLLog.log.info("Loaded custom library {}", file.getName());
+                            } catch (MalformedURLException e) {
+                                FMLLog.log.error("Unable to add custom mod file {} to the mod classloader", file.getAbsolutePath(), e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void addFile(File modFile) throws MalformedURLException
     {
-        URL url = modFile.toURI().toURL();
-        mainClassLoader.addURL(url);
+        mainClassLoader.addURL(modFile.getAbsoluteFile().toURI().toURL());
         this.sources.add(modFile);
     }
 
@@ -173,9 +183,8 @@ public class ModClassLoader extends URLClassLoader
 
     public ModAPITransformer addModAPITransformer(ASMDataTable dataTable)
     {
-        mainClassLoader.registerTransformer("net.minecraftforge.fml.common.asm.transformers.ModAPITransformer");
-        List<IClassTransformer> transformers = mainClassLoader.getTransformers();
-        ModAPITransformer modAPI = (ModAPITransformer) transformers.get(transformers.size()-1);
+        ModAPITransformer modAPI = new ModAPITransformer();
+        TransformerDelegate.registerTransformerByInstance(modAPI);
         modAPI.initTable(dataTable);
         return modAPI;
     }
