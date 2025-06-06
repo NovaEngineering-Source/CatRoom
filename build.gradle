@@ -498,7 +498,7 @@ project(':cleanroom') {
         // CatServer
         installer 'com.googlecode.json-simple:json-simple:1.1.1'
         installer 'org.yaml:snakeyaml:1.19'
-        installer 'net.md-5:SpecialSource:1.11.4'
+        installer 'net.md-5:SpecialSource:1.11.5'
         installer 'net.md-5:bungeecord-chat:1.16-R0.4'
         installer 'commons-lang:commons-lang:2.6' // Is needed for plugin compatibility
         installer 'org.xerial:sqlite-jdbc:3.21.0.1'
