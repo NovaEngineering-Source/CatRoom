@@ -12,6 +12,19 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 public class ModFixUtils {
     public static void doBlockCollisions() { }
 
+    /**
+     * Logic: NetherAPI transformer locates constant 7 in EntityAIMate#spawnBaby,
+     * and replace it with its own Hooks.spawnParticles call, which always returns 0.
+     * CraftBukkit inserted another constant 7 in Random instance for calculating experience drops,
+     * NetherAPI accidentally replaced it, leading to IllegalArgumentException.
+     *
+     * @see <a href="https://github.com/jbredwards/Nether-API/blob/1.12.2/src/main/java/git/jbredwards/nether_api/mod/asm/transformers/vanilla/Transformer_MC_10369.java#L230-L264">NetherAPI</a>
+     * @see net.minecraft.entity.ai.EntityAIMate#spawnBaby
+     */
+    public static int fixNetherAPI() {
+        return 7;
+    }
+
     public static void fixNetherex() {
         if (Loader.instance().getIndexedModList().containsKey("netherex")) {
             World netherWorld = DimensionManager.getWorld(-1);
