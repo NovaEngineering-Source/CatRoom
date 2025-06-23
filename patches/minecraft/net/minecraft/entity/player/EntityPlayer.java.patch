@@ -1203,7 +1203,7 @@
 +                                EntityCombustByEntityEvent combustEvent1 = new EntityCombustByEntityEvent(this.getBukkitEntity(), ((ASMFixer.IEntityASMFixer) entity).getBukkitEntity(), j * 4);
 +                                org.bukkit.Bukkit.getPluginManager().callEvent(combustEvent1);
 +
-+                                if (!combustEvent.isCancelled()) {
++                                if (!combustEvent1.isCancelled()) {
 +                                    ((ASMFixer.IEntityASMFixer) entity).setFire(combustEvent1.getDuration());
 +                                }
 +                                // CraftBukkit end
