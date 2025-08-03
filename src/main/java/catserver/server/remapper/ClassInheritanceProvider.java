@@ -1,7 +1,7 @@
 package catserver.server.remapper;
 
 import net.md_5.specialsource.provider.InheritanceProvider;
-import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
@@ -16,7 +16,9 @@ public class ClassInheritanceProvider implements InheritanceProvider {
     @Override
     public Collection<String> getParents(String className) {
         className = ReflectionTransformer.remapper.map(className);
-        try (InputStream is = Launch.classLoader.getResourceAsStream((className + ".class"))) {
+        FMLDeobfuscatingRemapper mapper = FMLDeobfuscatingRemapper.INSTANCE;
+        String obfName = mapper.unmap(className);
+        try (InputStream is = this.getClass().getClassLoader().getResourceAsStream((obfName + ".class"))) {
             if (is == null) {
                 return null;
             }
@@ -29,12 +31,12 @@ public class ClassInheritanceProvider implements InheritanceProvider {
             Collection<String> parents = new HashSet<>();
 
             if (visitor.getSuperName() != null && !visitor.getSuperName().equals("java/lang/Object")) {
-                parents.add(reverseMap(visitor.getSuperName()));
+                parents.add(reverseMap(mapper.map(visitor.getSuperName())));
             }
 
             for (String inter : visitor.getInterfaces()) {
                 if (inter != null) {
-                    parents.add(reverseMap(inter));
+                    parents.add(reverseMap(mapper.map(inter)));
                 }
             }
 
