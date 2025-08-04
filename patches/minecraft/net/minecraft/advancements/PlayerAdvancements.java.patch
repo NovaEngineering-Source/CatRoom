@@ -27,7 +27,7 @@
 -    private final Set<Advancement> field_192759_g = Sets.newLinkedHashSet();
 -    private final Set<Advancement> field_192760_h = Sets.newLinkedHashSet();
 -    private final Set<Advancement> field_192761_i = Sets.newLinkedHashSet();
-+    private final Map<Advancement, AdvancementProgress> field_192758_f = Maps.<Advancement, AdvancementProgress>newLinkedHashMap();
++    public final Map<Advancement, AdvancementProgress> field_192758_f = Maps.<Advancement, AdvancementProgress>newLinkedHashMap(); // CatServer - private -> public
 +    private final Set<Advancement> field_192759_g = Sets.<Advancement>newLinkedHashSet();
 +    private final Set<Advancement> field_192760_h = Sets.<Advancement>newLinkedHashSet();
 +    private final Set<Advancement> field_192761_i = Sets.<Advancement>newLinkedHashSet();
