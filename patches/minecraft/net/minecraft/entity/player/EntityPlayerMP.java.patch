@@ -428,12 +428,8 @@
  
          if (!this.field_70170_p.func_82736_K().func_82766_b("keepInventory") && !this.func_175149_v())
          {
-+            captureDrops = true;
-+            capturedDrops.clear();
-             this.func_190776_cN();
-             this.field_71071_by.func_70436_m();
-+
-+            captureDrops = false;
+-            this.func_190776_cN();
+-            this.field_71071_by.func_70436_m();
 +            net.minecraftforge.event.entity.player.PlayerDropsEvent event = new net.minecraftforge.event.entity.player.PlayerDropsEvent(this, p_70645_1_, capturedDrops, field_70718_bc > 0);
 +            if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event))
 +            {
